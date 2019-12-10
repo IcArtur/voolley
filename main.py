@@ -1,16 +1,38 @@
 from kivy.app import App
 from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.popup import Popup
 
 
-class MainApp(App):
+
+grey = [1,1,1,1]
+black = [0,0,0,0]
+players_list = ["Arianna", "Elena", "Valentina", "Francesca", "Beatrice", "Martina", "Nicolle"]
+
+class VolleyApp(App):
     def build(self):
-        label = Label(text='Hello from Kivy',
-                      size_hint=(.5, .5),
-                      pos_hint={'center_x': .5, 'center_y': .5})
+        layout = BoxLayout(padding=10, orientation='vertical')
 
-        return label
+        for player in players_list:
+            btn = Button(text=player, background_color=grey)
+            btn.bind(on_press=self.on_press_button)
+            layout.add_widget(btn)
+        return layout
+
+    def on_press_button(self, instance):
+        ppup = Popup(title='Test popup', size_hint=(1, .5))
+        layout2 = BoxLayout(padding=10)
+        lbl = Label(text="Cazzo")
+        btn1 = Button(text="+")
+        btn2 = Button(text="-")
+        layout2.add_widget(btn2)
+        layout2.add_widget(lbl)
+        layout2.add_widget(btn1)
+        ppup.content = layout2
+        ppup.open()
 
 
-if __name__ == '__main__':
-    app = MainApp()
+if __name__ == "__main__":
+    app = HBoxLayoutExample()
     app.run()

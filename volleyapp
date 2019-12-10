@@ -1,0 +1,2 @@
+<Button>:
+    on_press: app.on_press_button()
