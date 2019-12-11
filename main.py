@@ -14,9 +14,6 @@ players_list = ["Arianna", "Elena", "Valentina", "Francesca", "Beatrice", "Marti
 fields = ["Punti battuta", "Errori battuta", "Punti attacco", "Errori attacco", "Muri punto",
           "Ricezioni buone", "Ricezioni subite", "Tocchi a muro", "Appoggi/Difese #"]
 Window.size = (768, 1024)
-# Config.set('graphics', 'width', '1080')
-# Config.set('graphics', 'height', '1920')
-# Config.write()
 
 view = Builder.load_file("main.kv")
 
