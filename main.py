@@ -6,6 +6,8 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.accordion import Accordion, AccordionItem
 from kivy.core.window import Window
+import json
+import requests
 
 
 grey = [1,1,1,1]
@@ -15,10 +17,17 @@ fields = ["Punti battuta", "Errori battuta", "Punti attacco", "Errori attacco", 
           "Ricezioni buone", "Ricezioni subite", "Tocchi a muro", "Appoggi/Difese #"]
 Window.size = (768, 1024)
 
-view = Builder.load_file("main.kv")
+# view = Builder.load_file("main.kv")
 
 
 class VolleyApp(App):
+    url = "https://appvolley-1378a.firebaseio.com/.json"
+    JSON = "{{\"{fieeld}\": \"{valuue}\"}}".format(fieeld="Errori battuta", valuue=22)
+    auth_key = "z10cfqgwQVoyURtDNkMShbreXo2ta0dewB6xPjy4"
+
+    def patch(self, json_txt):
+        to_database = json.loads(json_txt)
+        requests.patch(url=self.url, json=to_database)
 
     def build(self):
         root_acc = Accordion(orientation='vertical')
@@ -34,13 +43,17 @@ class VolleyApp(App):
         pass
 
     def create_count_buttons(self, field):
-        layx = GridLayout(cols=3)
-        lbl = Label(text=field, size_hint= (None,None), size=(125,50))
-        btn1 = Button(text="+", size_hint= (None,None), size=(50,50))
-        btn2 = Button(text="-", size_hint= (None,None), size=(50,50))
+        layx = GridLayout(cols=3, rows=2)
+        lbl = Label(text=field, size_hint=(None, None), size=(125, 50))
+        lbl_numb = Label(text="12", size_hint=(None,None), size=(125, 50))
+        btn1 = Button(text="+", size_hint=(None, None), size=(50, 50))
+        btn1.bind(on_press=lambda x: self.patch(self.JSON))
+        btn2 = Button(text="-", size_hint=(None, None), size=(50, 50))
+        btn2.bind(on_press=lambda x: self.patch(self.JSON))
         layx.add_widget(btn2)
         layx.add_widget(lbl)
         layx.add_widget(btn1)
+        # layx.add_widget(lbl_numb)
         return layx
 
     def create_layout(self, player):
@@ -51,6 +64,9 @@ class VolleyApp(App):
             layout3.add_widget(layy)
         item.add_widget(layout3)
         return item
+
+    def reposition(self, root, *args, widg):
+        widg.pos = root.x, root.height / 2 - widg.height / 2
 
     # def on_press_button(self, instance):
     #     ppup = Popup(title='Test popup', size_hint=(1, .5))
