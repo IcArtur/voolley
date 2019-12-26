@@ -8,6 +8,8 @@ from kivy.uix.accordion import Accordion, AccordionItem
 from kivy.core.window import Window
 import json
 import requests
+import firebase_admin
+from firebase_admin import credentials
 
 
 grey = [1,1,1,1]
@@ -15,15 +17,15 @@ black = [0,0,0,0]
 players_list = ["Arianna", "Elena", "Valentina", "Francesca", "Beatrice", "Martina", "Nicolle", "Mirka", "Genoveffa", "Denise"]
 fields = ["Punti battuta", "Errori battuta", "Punti attacco", "Errori attacco", "Muri punto",
           "Ricezioni buone", "Ricezioni subite", "Tocchi a muro", "Appoggi/Difese #"]
-Window.size = (768, 1024)
 
 # view = Builder.load_file("main.kv")
 
 
 class VolleyApp(App):
     url = "https://appvolley-1378a.firebaseio.com/.json"
-    JSON = "{{\"{fieeld}\": \"{valuue}\"}}".format(fieeld="Errori battuta", valuue=22)
     auth_key = "z10cfqgwQVoyURtDNkMShbreXo2ta0dewB6xPjy4"
+    cred = credentials.Certificate("appvolley-1378a-firebase-adminsdk-nxndj-c7359cde10.json")
+    firebase_admin.initialize_app(cred)
 
     def patch(self, json_txt):
         to_database = json.loads(json_txt)
@@ -47,9 +49,9 @@ class VolleyApp(App):
         lbl = Label(text=field, size_hint=(None, None), size=(125, 50))
         lbl_numb = Label(text="12", size_hint=(None,None), size=(125, 50))
         btn1 = Button(text="+", size_hint=(None, None), size=(50, 50))
-        btn1.bind(on_press=lambda x: self.patch(self.JSON))
+        btn1.bind(on_press=lambda x: self.patch("{{\"{fieeld}\": \"{valuue}\"}}".format(fieeld="Errori battuta", valuue=7)))
         btn2 = Button(text="-", size_hint=(None, None), size=(50, 50))
-        btn2.bind(on_press=lambda x: self.patch(self.JSON))
+        btn2.bind(on_press=lambda x: self.patch("{{\"{fieeld}\": \"{valuue}\"}}".format(fieeld="Errori battuta", valuue=6)))
         layx.add_widget(btn2)
         layx.add_widget(lbl)
         layx.add_widget(btn1)
@@ -65,8 +67,6 @@ class VolleyApp(App):
         item.add_widget(layout3)
         return item
 
-    def reposition(self, root, *args, widg):
-        widg.pos = root.x, root.height / 2 - widg.height / 2
 
     # def on_press_button(self, instance):
     #     ppup = Popup(title='Test popup', size_hint=(1, .5))
